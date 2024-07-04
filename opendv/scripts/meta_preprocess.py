@@ -33,11 +33,12 @@ def duration2length(duration):
     return length
 
 
-def csv2json(csv_path, json_path):
+def csv2json(csv_path, json_path, video_ids):
     df = pd.read_csv(csv_path)
     vid_list = []
     keys = df.keys()
-    for vid_id in tqdm(range(len(df["ID"]))):
+    #for vid_id in tqdm(range(len(df["ID"]))):
+    for vid_id in tqdm(video_ids):
         vid_info = dict()
         for key in keys:
             value = df[key][vid_id]
@@ -61,6 +62,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Convert OpenDV-YouTube meta data from csv to json')
     parser.add_argument('--csv_path', '-i', type=str, default="meta/OpenDV-YouTube.csv", help='path to the csv file')
     parser.add_argument('--json_path', '-o', type=str, default="meta/OpenDV-YouTube.json", help='path to the json file')
+    parser.add_argument('--video_ids', '-v', nargs='+', type=int, default=None, help='video ids to be processed')
     args = parser.parse_args()
 
-    csv2json(args.csv_path, args.json_path)
+    csv2json(args.csv_path, args.json_path, args.video_ids)
