@@ -2,7 +2,7 @@
 
 
 #MAXID=2113 # Maximum train video id.
-STARTID=30
+STARTID=0
 MAXID=2113
 BATCHSIZE=2
 
@@ -24,12 +24,9 @@ process_videos() {
     # Download and preprocess data
     python scripts/meta_preprocess.py $args
     python scripts/youtube_download.py >> download_output.txt
-    python scripts/video2img.py >> vid2img_output.txt
 
-    # TODO: Lightspeed for data selection
-    python scripts/select_images.py $args
-    python scripts/copy_files.py outputs/final.json lotwheels2/images
-    
+    aws s3 cp --recursive OpenDV-YouTube/videos/ s3://lightly-datasets/lotwheels2/videos/$STARTID_$ENDID/ --dry-run
+
     # Remove the downloaded videos and frames
     rm -rf OpenDV-YouTube/videos
     rm -rf OpenDV-YouTube/full_images
